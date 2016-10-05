@@ -2,6 +2,7 @@
 
 import sqlite3
 import logging
+from piserial import PiSerial as Serial
 
 class ParserData:
 
@@ -9,21 +10,21 @@ class ParserData:
 
     def __init__(self, filename):
         self.filename = filename
-        self.sensors = (
-            (1,'S1'),
-            (2,'S2'),
-            (3,'S3'),
-            (4,'S4'),
-            (5,'S5'),
-            (6,'S6'),
-        )
 
     def start_routine(self):
         self.connect_DB()
         self.schema()
-        self.defining_sensors()
+        #self.defining_sensors()
         self.open_file()
         self.inserting_acceleration()
+
+    #ISSUE -- Conectar com a classe comunicação para receber o total de sensores ativos
+    def defining_sensors(self,total):
+        self.sensors_list = []
+        for x in xrange(1,total):
+            self.temp_sensor = (x,'S' + str(x))
+            self.sensors_list.append(self.temp_sensor)
+        self.sensors = tuple(self.sensors_list)
 
     def connect_DB(self):
         self.con = sqlite3.connect('sensor_data.db')
@@ -37,20 +38,28 @@ class ParserData:
             self.cur.execute('CREATE TABLE Sensor(sensor_id INTEGER PRIMARY KEY NOT NULL,'
                                                                              'name VARCHAR(3))')
             self.cur.execute('CREATE TABLE Acceleration(sensor_id INTEGER NOT NULL,'
-                                                                                     'acceleration INTEGER,'
-                                                                                     'timestamp TEXT,'
+                                                                                     'acceleration_x DECIMAL(2,2),'
+                                                                                     'acceleration_y DECIMAL(2,2),'
+                                                                                     'acceleration_z DECIMAL(2,2),'
+                                                                                     'timestamp INTEGER,'
                                                                                      'FOREIGN KEY(sensor_id) REFERENCES Sensor(sensor_id))')
             self.cur.execute('CREATE TABLE Speed(sensor_id INTEGER NOT NULL,'
-                                                                            'speed INTEGER,'
-                                                                            'timestamp TEXT,'
+                                                                            'speed_x DECIMAL(2,2),'
+                                                                            'speed_y DECIMAL(2,2),'
+                                                                            'speed_z DECIMAL(2,2),'
+                                                                            'timestamp INTEGER,'
                                                                             'FOREIGN KEY(sensor_id) REFERENCES Sensor(sensor_id))')
             self.cur.execute('CREATE TABLE Amplitude(sensor_id INTEGER NOT NULL,'
-                                                                                  'amplitude INTEGER,'
-                                                                                  'timestamp TEXT,'
+                                                                                  'amplitude_x DECIMAL(2,2),'
+                                                                                  'amplitude_y DECIMAL(2,2),'
+                                                                                  'amplitude_z DECIMAL(2,2),'
+                                                                                  'timestamp INTEGER,'
                                                                                   'FOREIGN KEY(sensor_id) REFERENCES Sensor(sensor_id))')
             self.cur.execute('CREATE TABLE Frequency(sensor_id INTEGER NOT NULL,'
-                                                                                  'frequency INTEGER,'
-                                                                                  'timestamp TEXT,'
+                                                                                  'frequency_x DECIMAL(2,2),'
+                                                                                  'frequency_y DECIMAL(2,2),'
+                                                                                  'frequency_z DECIMAL(2,2),'
+                                                                                  'timestamp INTEGER,'
                                                                                   'FOREIGN KEY(sensor_id) REFERENCES Sensor(sensor_id))')
             logging.info('Schema created')
         else:
@@ -89,19 +98,10 @@ class ParserData:
         self.con.commit()
         logging.info('Acceleration Data loaded to Database')
 
+    #FIXME - Falta testar
     def verification_sensor_number(self,value):
-        if value == 's1':
-            self.v1 = 1
-        if value == 's2':
-            self.v1 = 2
-        if value == 's3':
-            self.v1 = 3
-        if value == 's4':
-            self.v1 = 4
-        if value == 's5':
-            self.v1 = 5
-        if value == 's6':
-            self.v1 = 6
+        self.split_temp = value.split('')
+        self.v1 = int(self.split_temp[1])
 
 #Teste de funcionalidade da Classe de Parser
 #test = ParserData('data')
