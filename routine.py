@@ -11,6 +11,7 @@ class routine(threading.Thread):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.name = name
+        self.flag = flag
 
     def run(self):
         print 'Starting ' + self.name + 'at ' + time.ctime()
