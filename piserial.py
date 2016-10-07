@@ -6,7 +6,7 @@ import sys
 
 class PiSerial:
 
-    def __init__(self, port, baudrate):
+    def __init__(self):
         self.initialization()
 
     def initialization(self):
