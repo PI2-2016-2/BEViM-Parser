@@ -7,11 +7,15 @@ import sys
 class PiSerial:
 
     def __init__(self, port, baudrate):
-        self.port = port
-        self.baudrate = baudrate
+        self.initialization()
+
+    def initialization(self):
+        self.port = '/dev/ttyACM0'
+        self.baurate = 9600
+        self.timeout = 1
 
     def open_serialcom(self):
-        self.ser = serial.Serial(self.port,self.baudrate,timeout=1)
+        self.ser = serial.Serial(self.port,self.baudrate,timeout=self.timeout)
         if self.ser.isOpen():
             print 'Port opened with success!'
         else:
@@ -26,17 +30,21 @@ class PiSerial:
 
     def data_output(self):
         self.output = self.ser.readline()
-        print 'Arduino: ' + self.output
+        #print 'Arduino: ' + self.output
+        return self.output
 
-    def data_monitor(self):
+    def data_output_list(self):
+        self.data_list
         while True:
-            self.data_output()
+            self.incoming_data  = self.data_output()
+            if len(incoming_data) == 0:
+                break;
+            if len(incoming_data) != 0:
+                self.data_list.append(incoming_data)
+        self.close_serialcom()
+        return self.data_list
 
-    def data_raw_input(self):
-        while True:
-            data = raw_input('Entrada de dados do sistema: ')
-            self.data_input(data)
-
+    #OBS - Funcao nao sera utilizada
     def data_input(self,data):
         print 'Raspberry PI: ' + data
         self.bytes_writen = self.ser.write(data+'\n')
@@ -52,5 +60,5 @@ class PiSerial:
 #        piserial.open_serialcom()
 #        thread.start_new_thread(piserial.data_raw_input(), ("Thread-Input", 2, ))
 
-#Teste do Protocolo de Comunicação
+#Teste do Protocolo de Comunicacao
 #intout_serial(sys.argv[0])

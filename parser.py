@@ -2,37 +2,22 @@
 
 import sqlite3
 import logging
-from piserial import PiSerial as Serial
 
 class ParserData:
 
     logging.basicConfig(format='%(asctime)s %(message)s', filename='parser.log', level=logging.INFO, datefmt='%d/%m/%Y %I:%M:%S %p')
 
-    def __init__(self, filename):
-        self.filename = filename
-
-    def start_routine(self):
+    def __init__(self):
         self.connect_DB()
         self.schema()
-        #self.defining_sensors()
-        self.open_file()
-        self.inserting_acceleration()
-
-    #ISSUE -- Conectar com a classe comunicação para receber o total de sensores ativos
-    def defining_sensors(self,total):
-        self.sensors_list = []
-        for x in xrange(1,total):
-            self.temp_sensor = (x,'S' + str(x))
-            self.sensors_list.append(self.temp_sensor)
-        self.sensors = tuple(self.sensors_list)
 
     def connect_DB(self):
         self.con = sqlite3.connect('sensor_data.db')
         self.cur = self.con.cursor()
-        logging.info('Database connected')
+        logging.info('... Database connected ...')
 
     def schema(self):
-        logging.info('Verifying schema')
+        logging.info('... Verifying Schema ...')
         self.info = self.cur.execute('PRAGMA table_info(Sensor)')
         if len(self.info.fetchall()) == 0:
             self.cur.execute('CREATE TABLE Sensor(sensor_id INTEGER PRIMARY KEY NOT NULL,'
@@ -61,48 +46,68 @@ class ParserData:
                                                                                   'frequency_z DECIMAL(2,2),'
                                                                                   'timestamp INTEGER,'
                                                                                   'FOREIGN KEY(sensor_id) REFERENCES Sensor(sensor_id))')
-            logging.info('Schema created')
+            logging.info('Database schema created with success!')
         else:
-            logging.info('Schema was already created')
+            logging.info('Database schema already exists!')
 
-    def defining_sensors(self):
+    def total_sensors(self, data_tuple):
+        self.sensors_list = []
+        for default_data in data_tuple:
+            for unique_data in default_data:
+                for x in xrange(1,8):
+                    self.join = 'S' + str(x)
+                    if unique_data == self.join:
+                        self.temp_data = (x,self.join)
+                        self.sensors_list.append(self.temp_data)
+        return tuple(self.sensors_list)
+
+
+    def inserting_sensors(self, sensors_tuple):
         logging.info('Verifying Sensors table info')
         if len(self.cur.execute('SELECT * FROM Sensor').fetchall()) == 0:
-            self.cur.executemany("INSERT INTO Sensor VALUES(?, ?);", self.sensors)
+            self.cur.executemany("INSERT INTO Sensor VALUES(?, ?);", sensors_tuple)
             self.con.commit()
-            logging.info('Info about sensors inserted')
+            logging.info('Information about ACTIVE sensors were inserted with success!')
         else:
-            logging.info('Sensors table info already exists')
+            logging.info('Information about ACTIVE sensors already exists!')
 
-    def open_file(self):
-        self.file = open(self.filename,'r')
-        self.lines = self.file.readlines()
-        self.creating_list_tuple(self.lines)
-        self.file.close()
-
-    def creating_list_tuple(self,lines):
+    def creating_data_tuple(self, flag, lines):
         self.brute_data = []
         for line in lines:
             self.temp = line.split(',')
-            self.verification_sensor_number(self.temp[0])
-            self.temp[0] = self.v1
-            self.temp[1] = int(self.temp[1])
+            if flag == 1:
+                self.verification_sensor_number(self.temp[0])
+                self.temp[0] = self.v1
+            for x in xrange(1,3):
+                self.temp[x] = float(self.temp[x])
             self.temp.pop()
             self.brute_data.append(tuple(self.temp))
-        self.tuple_data = tuple(self.brute_data)
+        return tuple(self.brute_data)
 
-    def inserting_acceleration(self):
-        logging.info('Inserting Acceleration Data')
-        print self.tuple_data
-        self.cur.executemany("INSERT INTO Acceleration VALUES(?, ?, ?);", self.tuple_data)
+    def inserting_acceleration(self, data_tuple):
+        logging.info('--> Inserting ACCELERATION Data...')
+        self.cur.executemany("INSERT INTO Acceleration VALUES(?, ?, ?, ?, ?);", data_tuple)
         self.con.commit()
-        logging.info('Acceleration Data loaded to Database')
+        logging.info('ACCELARATION Data loaded to Database with success!')
 
-    #FIXME - Falta testar
-    def verification_sensor_number(self,value):
+    def inserting_speed(self, data_tuple):
+        logging.info('--> Inserting SPEED Data...')
+        self.cur.executemany("INSERT INTO Speed VALUES(?, ?, ?, ?, ?);", data_tuple)
+        self.con.commit()
+        logging.info('SPEED Data loaded to Database with success!')
+
+    def inserting_amplitude(self, data_tuple):
+        logging.info('--> Inserting AMPLITUDE Data...')
+        self.cur.executemany("INSERT INTO Amplitude VALUES(?, ?, ?, ?, ?);", data_tuple)
+        self.con.commit()
+        logging.info('AMPLITUDE Data loaded to Database with success!')
+
+    def inserting_frequency(self, data_tuple):
+        logging.info('--> Inserting FREQUENCY Data...')
+        self.cur.executemany("INSERT INTO Frequency VALUES(?, ?, ?, ?, ?);", data_tuple)
+        self.con.commit()
+        logging.info('FREQUENCY Data loaded to Database with success!')
+
+    def verification_sensor_number(self, value):
         self.split_temp = value.split('')
         self.v1 = int(self.split_temp[1])
-
-#Teste de funcionalidade da Classe de Parser
-#test = ParserData('data')
-#test.start_routine()
