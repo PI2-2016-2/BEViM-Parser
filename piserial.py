@@ -11,7 +11,7 @@ class PiSerial:
 
     def initialization(self):
         self.port = '/dev/ttyACM0'
-        self.baurate = 9600
+        self.baudrate = 9600
         self.timeout = 1
 
     def open_serialcom(self):
