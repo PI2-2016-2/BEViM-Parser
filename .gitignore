@@ -3,3 +3,6 @@
 
 #Sqlite
 *.db
+
+#Python
+*.pyc
