@@ -14,7 +14,7 @@ class routine(threading.Thread):
 
     def run(self):
         print 'Starting ' + self.name + 'at ' + time.ctime()
-        if flag == 1:
+        if self.flag == 1:
             parser_routine(self.name)
         else:
             inserting_command(self.name)
