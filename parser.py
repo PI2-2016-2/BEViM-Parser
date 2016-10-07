@@ -109,5 +109,5 @@ class ParserData:
         logging.info('FREQUENCY Data loaded to Database with success!')
 
     def verification_sensor_number(self, value):
-        self.split_temp = value.split('')
+        self.split_temp = list(value)
         self.v1 = int(self.split_temp[1])
