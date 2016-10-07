@@ -22,7 +22,7 @@ class routine(threading.Thread):
 #Rotina responsavel por pegar os sensores ativos - FALTA TESTAR
 def get_sensors_routine(threadName,command):
 
-    #Instanciação da porta serial
+    #Instanciacao da porta serial
     piserial = Piserial()
     piserial.open_serialcom()
 
