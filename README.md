@@ -5,15 +5,16 @@ Repositório para as rotinas de Comunicação, Parser e Processamento dos dados 
 ##Changelog
 * Paulo E. S. Borba - 20/09 - Criação do Repositório
 * Paulo E. S. Borba - 04/10 - Atualização do Parser e Adição da Rotina de Comunicação
+* Paulo E. S. Borba - 07/10 - Protótipo Funcional do Parser em Funcionamento e a Rotina de comunicação das chegada dos dados completada
 
-## Rotina de Parser - Em desenvolvimento
+## Rotina de Parser - Protótipo Funcional
 
 O arquivo parser.py é responsavel por fazer leitura dos dados provindos do módulo de comunicação, realizar a
 criação das tabelas em SQLite, tratar os dados e importa-los no banco de dados. A proposta que está sendo
 desenvolvida conta com o parser tendo acesso ao modo leitura na porta serial e lendo diretamente todos os dados
 provindos da porta serial.
 
-## Rotina de Comunicação - Protótipo Funcional
+## Rotina de Comunicação - Completo
 
 A rotina conta com o auxílio da biblioteca pyserial, que é responsável por abstrair funções de baixo para um alto
 nível de manipulação de dados e controle. Esta rotina permite realizar a abertura da porta serial, receber, ler e

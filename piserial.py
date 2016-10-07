@@ -30,7 +30,6 @@ class PiSerial:
 
     def data_output(self):
         self.output = self.ser.readline()
-        #print 'Arduino: ' + self.output
         return self.output
 
     def data_output_list(self):
@@ -38,30 +37,15 @@ class PiSerial:
         self.counter = 0
         while True:
             self.incoming_data  = self.data_output()
-            if len(self.incoming_data) == 3:
+            if self.incoming_data == '-1\r\n':
                 self.counter += 1
             if self.counter == 2:
                 break;
-            if  len(self.incoming_data) > 0  and len(self.incoming_data) >20 and len(self.incoming_data) < 50:
+            if  len(self.incoming_data) > 20 and len(self.incoming_data) < 100:
                 self.data_list.append(self.incoming_data)
         self.close_serialcom()
         return self.data_list
 
     #OBS - Funcao nao sera utilizada
     def data_input(self,data):
-        print 'Raspberry PI: ' + data
         self.bytes_writen = self.ser.write(data+'\n')
-        print str(self.bytes_writen) + ' bytes were sent!'
-
-#def inout_serial(flag):
-#    if int(flag) == 1:
-#        piserial = PiSerial('/dev/ttyACM0',9600)
-#        piserial.open_serialcom()
-#        thread.start_new_thread(piserial.data_monitor(), ("Thread-Monitor", 2, ))
-#    else:
-#        piserial = PiSerial('/dev/ttyACM0',9600)
-#        piserial.open_serialcom()
-#        thread.start_new_thread(piserial.data_raw_input(), ("Thread-Input", 2, ))
-
-#Teste do Protocolo de Comunicacao
-#intout_serial(sys.argv[0])

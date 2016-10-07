@@ -80,7 +80,7 @@ class ParserData:
                 self.temp[0] = self.v1
             for x in xrange(1,3):
                 self.temp[x] = float(self.temp[x])
-            self.temp.pop()
+            self.temp[4] = self.temp[4].replace('\r\n','')
             self.brute_data.append(tuple(self.temp))
         return tuple(self.brute_data)
 

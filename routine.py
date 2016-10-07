@@ -14,11 +14,12 @@ class routine(threading.Thread):
         self.flag = flag
 
     def run(self):
-        print 'Starting ' + self.name + 'at ' + time.ctime()
+        print 'Starting ' + self.name + ' at ' + time.ctime()
         if self.flag == 1:
             parser_routine(self.name)
         else:
             inserting_command(self.name)
+        print 'Exiting ' + self.name + ' at ' + time.ctime()
 
 #Rotina responsavel por pegar os sensores ativos - FALTA TESTAR
 def get_sensors_routine(threadName,command):
@@ -44,20 +45,22 @@ def parser_routine(threadName):
         parser.creating_data_tuple(1,
             piserial.data_output_list()))
 
-    print 'Finishing Parser Routine'
+    print '--> Finishing Parser Routine!'
 
 #Funcao para teste da rotina de Parser
 def inserting_command(threadName):
 
     piserial = Piserial()
     piserial.open_serialcom()
+    piserial.data_output()
+    piserial.data_output()
     piserial.data_input('-1')
     piserial.data_input('50')
     time.sleep(5)
     piserial.data_input('-1')
     piserial.close_serialcom()
 
-    print 'Finishing Command Routine'
+    print '--> Finishing Command Routine!'
 
 thread_parser = routine(1,'Thread-Parser-Routine',1)
 thread_command = routine(1,'Thread-Command-Routine',0)
