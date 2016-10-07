@@ -35,9 +35,12 @@ class PiSerial:
 
     def data_output_list(self):
         self.data_list = []
+        self.counter = 0
         while True:
             self.incoming_data  = self.data_output()
-            if len(self.incoming_data) == 0:
+            if len(self.incoming_data) == 3:
+                self.counter += 1
+            if self.counter == 2:
                 break;
             if  len(self.incoming_data) > 0  and len(self.incoming_data) >20 and len(self.incoming_data) < 50:
                 self.data_list.append(self.incoming_data)
