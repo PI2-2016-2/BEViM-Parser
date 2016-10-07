@@ -39,7 +39,7 @@ class PiSerial:
             self.incoming_data  = self.data_output()
             if len(self.incoming_data) == 0:
                 break;
-            if len(self.incoming_data) != 0:
+            if  len(self.incoming_data) > 0  and len(self.incoming_data) >20 and len(self.incoming_data) < 50:
                 self.data_list.append(self.incoming_data)
         self.close_serialcom()
         return self.data_list
