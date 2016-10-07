@@ -34,7 +34,7 @@ class PiSerial:
         return self.output
 
     def data_output_list(self):
-        self.data_list
+        self.data_list = []
         while True:
             self.incoming_data  = self.data_output()
             if len(incoming_data) == 0:
