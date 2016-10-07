@@ -34,10 +34,6 @@ def get_sensors_routine(threadName,command):
             parser.creating_data_tuple(0,
                 piserial.data_output_list())))
 
-    #Termino da Thread
-    threadName.exit()
-
-
 def parser_routine(threadName):
 
     piserial = Piserial()
@@ -49,8 +45,6 @@ def parser_routine(threadName):
             piserial.data_output_list()))
 
     print 'Finishing Parser Routine'
-    #Termino da Thread
-    threadName.exit()
 
 #Funcao para teste da rotina de Parser
 def inserting_command(threadName):
@@ -64,7 +58,6 @@ def inserting_command(threadName):
     piserial.close_serialcom()
 
     print 'Finishing Command Routine'
-    threadName.exit()
 
 thread_parser = routine(1,'Thread-Parser-Routine',1)
 thread_command = routine(1,'Thread-Command-Routine',0)
