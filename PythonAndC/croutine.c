@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 		printf("Frequência a ser enviada para o Sistema de Controle: %d.\n\n", frequency_input);
 	}
 
-	/*printf("Abrindo porta serial...\n");
+	printf("Abrindo porta serial...\n");
 
 	int descriptor_uart = open_serial();
 
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 
 	close_serial(descriptor_uart);
 
-	printf("Frequencia enviada com sucesso para o Sistema de Controle.\n");*/
+	printf("Frequencia enviada com sucesso para o Sistema de Controle.\n");
 
 	return 0;
 }
