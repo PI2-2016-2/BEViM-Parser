@@ -15,7 +15,7 @@ void print_general_informations()
 
 int open_serial()
 {
-	int descriptor = open("/dev/ttyAMA0", O_RDWR | O_NOCTTY | O_NDELAY);
+	int descriptor = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY);
 	if (descriptor == -1)
 	{
 		printf("Erro ao abrir a porta. Verifique se a porta nao esta ocupada.\n");
@@ -86,11 +86,15 @@ int main(int argc, char *argv[])
 
 	int descriptor_uart = open_serial();
 
+	int begin_experiment = -1;
+	char enter = '\n';
+
 	unsigned char transmission_buffer[256];
 
-	memcpy(&transmission_buffer[0], &frequency_input, 4);
+	memcpy(&transmission_buffer[0], &begin_experiment, 4);
+	transmission_buffer[4] = enter;
 
-	send_data(descriptor_uart, transmission_buffer, 4);
+	send_data(descriptor_uart, transmission_buffer, sizeof(begin_experiment) + sizeof(enter));
 
 	close_serial(descriptor_uart);
 

@@ -48,19 +48,15 @@ def parser_routine(threadName):
     print '--> Finishing Parser Routine!'
 
 #Funcao para teste da rotina de Parser
-def inserting_command(threadName):
+def inserting_command(frequency, begin_experiment_flag=False):
 
     piserial = Piserial()
     piserial.open_serialcom()
-    piserial.data_output()
-    piserial.data_output()
-    piserial.data_input('-1')
-    piserial.data_input('50')
-    time.sleep(5)
-    piserial.data_input('-1')
-    piserial.close_serialcom()
+    if(begin_experiment_flag):
+        piserial.data_input('-1')
 
-    print '--> Finishing Command Routine!'
+    piserial.data_input(frequency)
+    piserial.close_serialcom()
 
 thread_parser = routine(1,'Thread-Parser-Routine',1)
 thread_command = routine(1,'Thread-Command-Routine',0)
